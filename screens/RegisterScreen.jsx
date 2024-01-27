@@ -7,11 +7,13 @@ import {
   TextInput,
   TouchableOpacity,
   View,
+  Alert,
 } from "react-native";
 import React, { useState } from "react";
 import { useNavigation } from "@react-navigation/native";
 
 import userIcon from "../assets/icon.png";
+import axios from "axios";
 
 export default function RegisterScreen() {
   const navigation = useNavigation();
@@ -23,6 +25,37 @@ export default function RegisterScreen() {
 
   const handleImageUpload = () => {
     setImage(userIcon);
+  };
+
+  const handleRegister = async () => {
+    try {
+      const user = {
+        name: name,
+        password: password,
+        email: email,
+        image: image,
+      };
+
+      const res = await axios.post(
+        "http://192.168.43.12:8000/user/register",
+        user
+      );
+
+      Alert.alert(
+        "Registeration Succesfull",
+        "You have been registered successfully"
+      );
+      setEmail("");
+      setImage("");
+      setPassword("");
+      setName("");
+    } catch (error) {
+      Alert.alert(
+        "Registeration Error",
+        "An error occured while registering the user"
+      );
+      console.log(error);
+    }
   };
 
   return (
@@ -204,6 +237,7 @@ export default function RegisterScreen() {
                 borderRadius: 15,
                 elevation: 5,
               }}
+              onPress={handleRegister}
             >
               <Text
                 style={{
